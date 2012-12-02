@@ -1,4 +1,4 @@
-package com.mop.BaseRaider;
+package com.minecraftserver.baseraider;
 
 import org.bukkit.Location;
 

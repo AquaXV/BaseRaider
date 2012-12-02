@@ -1,4 +1,4 @@
-package com.mop.BaseRaider;
+package com.minecraftserver.baseraider;
 
 import java.util.List;
 import java.util.UUID;
@@ -100,7 +100,7 @@ public class BaseRaider extends JavaPlugin implements Listener {
 	    Location playerLoc = event.getPlayer().getLocation();
 	    Location targetLoc = null;
 	    double finaldistance = Double.MAX_VALUE, distance = 0;
-	    for (Player p : Bukkit.getOnlinePlayers())
+	    for (Player p : event.getPlayer().getWorld().getPlayers())
 		if (!p.isOp()
 			&& p.hasPermission("baseraider.playertracker.trackable")
 			&& p != event.getPlayer()) {
@@ -256,13 +256,15 @@ public class BaseRaider extends JavaPlugin implements Listener {
 	}
     }
 
+    
+    //removes floating liquid
     private void removeFloatingLiquid(Block block) {
 	Location loc = block.getLocation();
-	int hitstrength = 8;
+	int radius = 8;
 	// removal of flowing water, radius of 4
-	for (int x = -hitstrength; x <= hitstrength; x++)
-	    for (int y = -hitstrength; y <= hitstrength; y++)
-		for (int z = -hitstrength; z <= hitstrength; z++) {
+	for (int x = -radius; x <= radius; x++)
+	    for (int y = -radius; y <= radius; y++)
+		for (int z = -radius; z <= radius; z++) {
 		    Location targetLoc = new Location(loc.getWorld(),
 			    loc.getX() + x, loc.getY() + y, loc.getZ() + z);
 		    if (loc.distance(targetLoc) <= 3.0D
@@ -276,13 +278,14 @@ public class BaseRaider extends JavaPlugin implements Listener {
 		}
     }
 
+    //removes stationary liquid
     private void removeStationaryLiquid(Block block) {
 	Location loc = block.getLocation();
-	int hitstrength = 6;
+	int radius = 6;
 	// removal of source water, radius of 3
-	for (int x = -hitstrength; x <= hitstrength; x++)
-	    for (int y = -hitstrength; y <= hitstrength; y++)
-		for (int z = -hitstrength; z <= hitstrength; z++) {
+	for (int x = -radius; x <= radius; x++)
+	    for (int y = -radius; y <= radius; y++)
+		for (int z = -radius; z <= radius; z++) {
 		    Location targetLoc = new Location(loc.getWorld(),
 			    loc.getX() + x, loc.getY() + y, loc.getZ() + z);
 		    if (loc.distance(targetLoc) <= 3.0D
@@ -296,15 +299,16 @@ public class BaseRaider extends JavaPlugin implements Listener {
 		}
     }
 
+    //explodes and destroyes obby
     public void explode(Block block) {
 	Location loc = block.getLocation();
-	int hitstrength = 1;
+	int radius = 1;
 	// 1F=0.25 TNT explosion; 4F=normal TNT strength
 	loc.getWorld().createExplosion(loc, 1.5F);
 	// removal of obby, radius of 3
-	for (int x = -hitstrength; x <= hitstrength; x++)
-	    for (int y = -hitstrength; y <= hitstrength; y++)
-		for (int z = -hitstrength; z <= hitstrength; z++) {
+	for (int x = -radius; x <= radius; x++)
+	    for (int y = -radius; y <= radius; y++)
+		for (int z = -radius; z <= radius; z++) {
 		    Location targetLoc = new Location(loc.getWorld(),
 			    loc.getX() + x, loc.getY() + y, loc.getZ() + z);
 		    if (loc.distance(targetLoc) <= 3.0D
