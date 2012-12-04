@@ -101,10 +101,11 @@ public class BaseRaider extends JavaPlugin implements Listener {
 	    Location playerLoc = event.getPlayer().getLocation();
 	    Location targetLoc = null;
 	    double finaldistance = Double.MAX_VALUE, distance = 0;
-	    for (Player p : event.getPlayer().getWorld().getPlayers())
+	    for (Player p : Bukkit.getOnlinePlayers())
 		if (!p.isOp()
 			&& p.hasPermission("baseraider.playertracker.trackable")
-			&& p != event.getPlayer()) {
+			&& p != event.getPlayer()
+			&& p.getWorld() == event.getPlayer().getWorld()) {
 		    distance = playerLoc.distance(p.getLocation());
 		    if (distance < finaldistance) {
 			finaldistance = distance;
@@ -126,7 +127,7 @@ public class BaseRaider extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onFireBallIgnites(BlockIgniteEvent event) {
-	if (event.getPlayer()==null&&fireballflying > 0) {
+	if (event.getPlayer() == null && fireballflying > 0) {
 	    fireballflying--;
 	    explode(event.getBlock());
 	}
@@ -147,11 +148,11 @@ public class BaseRaider extends JavaPlugin implements Listener {
 	if (event.getBow().getEnchantmentLevel(Enchantment.WATER_WORKER) == 1) {
 	    if (event.getBow() != null) {
 		Player player = (Player) event.getEntity();
-		
+
 		if (player.getItemInHand().getType() == Material.BOW) {
-			if (!player.hasPermission("baseraider.bow.cankeepbow1")){
-				player.getInventory().remove(player.getItemInHand());
-			}
+		    if (!player.hasPermission("baseraider.bow.cankeepbow1")) {
+			player.getInventory().remove(player.getItemInHand());
+		    }
 		    lvlOneArrows.add(event.getProjectile().getUniqueId());
 		}
 	    }
@@ -159,9 +160,9 @@ public class BaseRaider extends JavaPlugin implements Listener {
 	    if (event.getBow() != null) {
 		Player player = (Player) event.getEntity();
 		if (player.getItemInHand().getType() == Material.BOW) {
-			if (!player.hasPermission("baseraider.bow.cankeepbow2")){
-				player.getInventory().remove(player.getItemInHand());
-			}
+		    if (!player.hasPermission("baseraider.bow.cankeepbow2")) {
+			player.getInventory().remove(player.getItemInHand());
+		    }
 		    lvlTwoArrows.add(event.getProjectile().getUniqueId());
 		}
 	    }
@@ -257,8 +258,7 @@ public class BaseRaider extends JavaPlugin implements Listener {
 	}
     }
 
-    
-    //removes floating liquid
+    // removes floating liquid
     private void removeFloatingLiquid(Block block) {
 	Location loc = block.getLocation();
 	int radius = 8;
@@ -279,7 +279,7 @@ public class BaseRaider extends JavaPlugin implements Listener {
 		}
     }
 
-    //removes stationary liquid
+    // removes stationary liquid
     private void removeStationaryLiquid(Block block) {
 	Location loc = block.getLocation();
 	int radius = 6;
@@ -300,7 +300,7 @@ public class BaseRaider extends JavaPlugin implements Listener {
 		}
     }
 
-    //explodes and destroyes obby
+    // explodes and destroyes obby
     public void explode(Block block) {
 	Location loc = block.getLocation();
 	int radius = 1;
