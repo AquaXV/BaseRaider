@@ -66,25 +66,6 @@ public class BaseRaider extends JavaPlugin implements Listener {
 	this.log.info("[BaseRaider] System Disabled.");
     }
 
-    /*
-     * @EventHandler(priority = EventPriority.NORMAL) public void
-     * onFireChargePlace(PlayerInteractEvent event) { if ((event.getAction() ==
-     * Action.RIGHT_CLICK_BLOCK) && (event.getMaterial() == Material.SULPHUR) &&
-     * !(event.getClickedBlock().getType() == Material.CHEST ||
-     * event.getClickedBlock().getType() == Material.FURNACE ||
-     * event.getClickedBlock().getType() == Material.WORKBENCH ||
-     * event.getClickedBlock().getType() == Material.DISPENSER ||
-     * event.getClickedBlock().getType() == Material.ANVIL || event
-     * .getClickedBlock().getType() == Material.BREWING_STAND) &&
-     * event.getItem().getEnchantmentLevel(Enchantment.DURABILITY) > 0) {
-     * event.getPlayer
-     * ().getItemInHand().setAmount(event.getPlayer().getItemInHand
-     * ().getAmount() - 1); locations .add(new
-     * FCHitData(event.getClickedBlock().getLocation(),
-     * event.getItem().getEnchantmentLevel( Enchantment.DURABILITY) - 1));
-     * explode(); } }
-     */
-
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
 	if ((event.getAction() == Action.RIGHT_CLICK_BLOCK)
