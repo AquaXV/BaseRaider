@@ -1,0 +1,13 @@
+name: BaseRaider
+version: 1.5
+author: M0P, AquaXV
+main: com.minecraftserver.baseraider.BaseRaider
+prefix: baseraider
+      
+permissions:
+    baseraider.playertracker.trackable:
+        description: Allows you to be tracked by others
+        default: op
+    baseraider.playertracker.cantrack:
+        description: Allows you to track other players
+        default: op
