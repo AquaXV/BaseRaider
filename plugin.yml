@@ -11,3 +11,9 @@ permissions:
     baseraider.playertracker.cantrack:
         description: Allows you to track other players
         default: op
+    baseraider.bow.cankeep1:
+        description: Allows you to keep your lvl 1 bow
+        default: op
+    baseraider.bow.cankeep2:
+        description: Allows you to keep your lvl 1 bow
+        default: op
