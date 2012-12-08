@@ -82,7 +82,6 @@ public class BaseRaider extends JavaPlugin implements Listener {
 	    Location targetLoc = null;
 	    double finaldistance = Double.MAX_VALUE, distance = 0;
 	    for (Player p : Bukkit.getOnlinePlayers()) {
-		Bukkit.broadcastMessage(p.getName() + " World: " + p.getWorld());
 		if (!p.isOp()
 			&& p.hasPermission("baseraider.playertracker.trackable")
 			&& p != event.getPlayer()

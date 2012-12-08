@@ -1,5 +1,5 @@
 name: BaseRaider
-version: 1.5
+version: 1.6
 author: M0P, AquaXV
 main: com.minecraftserver.baseraider.BaseRaider
 prefix: baseraider
