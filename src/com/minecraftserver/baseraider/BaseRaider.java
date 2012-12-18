@@ -48,257 +48,209 @@ import org.bukkit.util.BlockIterator;
 import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
 
 public class BaseRaider extends JavaPlugin implements Listener {
-    Logger log = Logger.getLogger("Minecraft");
-    Recipes recipes = new Recipes();
-    List<UUID> lvlOneArrows = new Vector<>();
-    List<UUID> lvlTwoArrows = new Vector<>();
+    Logger      log            = Logger.getLogger("Minecraft");
+    Recipes     recipes        = new Recipes();
+    List<UUID>  lvlOneArrows   = new Vector<>();
+    List<UUID>  lvlTwoArrows   = new Vector<>();
 
     private int fireballflying = 0;
-    private int strength = 0;
+    private int strength       = 0;
 
     public void onEnable() {
-	getServer().getPluginManager().registerEvents(this, this);
-	recipes.addRecipes();
-	this.log.info("[BaseRaider] System Enabled.");
+        getServer().getPluginManager().registerEvents(this, this);
+        recipes.addRecipes();
+        this.log.info("[BaseRaider] System Enabled.");
     }
 
     public void onDisable() {
-	this.log.info("[BaseRaider] System Disabled.");
-    }
-
-    @EventHandler
-    public void onPlayerInteractEvent(PlayerInteractEvent event) {
-	if ((event.getAction() == Action.RIGHT_CLICK_BLOCK)
-		&& event.getMaterial() == Material.COMPASS
-		&& event.getPlayer().hasPermission(
-			"baseraider.playertracker.cantrack")
-		&& !(event.getClickedBlock().getType() == Material.CHEST
-			|| event.getClickedBlock().getType() == Material.FURNACE
-			|| event.getClickedBlock().getType() == Material.WORKBENCH
-			|| event.getClickedBlock().getType() == Material.DISPENSER
-			|| event.getClickedBlock().getType() == Material.ANVIL || event
-			.getClickedBlock().getType() == Material.BREWING_STAND)) {
-	    Location playerLoc = event.getPlayer().getLocation();
-	    Location targetLoc = null;
-	    double finaldistance = Double.MAX_VALUE, distance = 0;
-	    for (Player p : Bukkit.getOnlinePlayers()) {
-		if (!p.isOp()
-			&& p.hasPermission("baseraider.playertracker.trackable")
-			&& p != event.getPlayer()
-			&& p.getWorld() == event.getPlayer().getWorld()) {
-		    distance = playerLoc.distance(p.getLocation());
-		    if (distance < finaldistance) {
-			finaldistance = distance;
-			targetLoc = p.getLocation();
-		    }
-		}
-	    }
-	    if (targetLoc != null) {
-		event.getPlayer().sendMessage(
-			ChatColor.BLUE + "The next player is " + ChatColor.GOLD
-				+ (int) finaldistance + ChatColor.BLUE
-				+ " blocks away from you.");
-		event.getPlayer().setCompassTarget(targetLoc);
-	    } else
-		event.getPlayer().sendMessage(
-			ChatColor.BLUE + "There is no player near you!");
-
-	}
+        this.log.info("[BaseRaider] System Disabled.");
     }
 
     @EventHandler
     public void onFireBallIgnites(BlockIgniteEvent event) {
-	if (event.getPlayer() == null && fireballflying > 0) {
-	    fireballflying--;
-	    explode(event.getBlock());
-	}
+        if (event.isCancelled()) return;
+        if (event.getPlayer() == null && fireballflying > 0) {
+            fireballflying--;
+            explode(event.getBlock());
+        }
     }
 
     @EventHandler
     public void onDispenceFireball(BlockDispenseEvent event) {
-	if (event.getItem().getType() == Material.FIREBALL
-		&& event.getItem().getEnchantmentLevel(Enchantment.DURABILITY) == 1) {
-	    strength = event.getItem().getEnchantmentLevel(
-		    Enchantment.DURABILITY);
-	    fireballflying++;
-	}
+        if (event.isCancelled()) return;
+        if (event.getItem().getType() == Material.FIREBALL
+                && event.getItem().getEnchantmentLevel(Enchantment.DURABILITY) == 1) {
+            strength = event.getItem().getEnchantmentLevel(Enchantment.DURABILITY);
+            fireballflying++;
+        }
     }
 
     @EventHandler
     public void shootArrow(EntityShootBowEvent event) {
-	if (event.getBow().getEnchantmentLevel(Enchantment.WATER_WORKER) == 1) {
-	    if (event.getBow() != null) {
-		Player player = (Player) event.getEntity();
+        if (event.isCancelled()) return;
+        if (event.getBow().getEnchantmentLevel(Enchantment.WATER_WORKER) == 1) {
+            if (event.getBow() != null) {
+                Player player = (Player) event.getEntity();
 
-		if (player.getItemInHand().getType() == Material.BOW) {
-		    if (!player.hasPermission("baseraider.bow.cankeepbow1")) {
-			player.getInventory().remove(player.getItemInHand());
-		    }
-		    lvlOneArrows.add(event.getProjectile().getUniqueId());
-		}
-	    }
-	} else if (event.getBow().getEnchantmentLevel(Enchantment.WATER_WORKER) == 2) {
-	    if (event.getBow() != null) {
-		Player player = (Player) event.getEntity();
-		if (player.getItemInHand().getType() == Material.BOW) {
-		    if (!player.hasPermission("baseraider.bow.cankeepbow2")) {
-			player.getInventory().remove(player.getItemInHand());
-		    }
-		    lvlTwoArrows.add(event.getProjectile().getUniqueId());
-		}
-	    }
-	}
+                if (player.getItemInHand().getType() == Material.BOW) {
+                    if (!player.hasPermission("baseraider.bow.cankeepbow1")) {
+                        player.getInventory().remove(player.getItemInHand());
+                    }
+                    lvlOneArrows.add(event.getProjectile().getUniqueId());
+                }
+            }
+        } else if (event.getBow().getEnchantmentLevel(Enchantment.WATER_WORKER) == 2) {
+            if (event.getBow() != null) {
+                Player player = (Player) event.getEntity();
+                if (player.getItemInHand().getType() == Material.BOW) {
+                    if (!player.hasPermission("baseraider.bow.cankeepbow2")) {
+                        player.getInventory().remove(player.getItemInHand());
+                    }
+                    lvlTwoArrows.add(event.getProjectile().getUniqueId());
+                }
+            }
+        }
     }
 
     @EventHandler
     public void onArrowHit(ProjectileHitEvent event) {
-	if (event.getEntityType() == EntityType.ARROW) {
-	    Arrow arrow = (Arrow) event.getEntity();
-	    if (lvlOneArrows.contains(arrow.getUniqueId())) {
-		Block hitBlock = arrow.getLocation().getBlock();
-		hitBlock.getWorld().createExplosion(arrow.getLocation(), 0.1F);
-		removeFloatingLiquid(hitBlock);
-		lvlOneArrows.remove(arrow.getUniqueId());
-	    } else if (lvlTwoArrows.contains(arrow.getUniqueId())) {
-		Block hitBlock = arrow.getLocation().getBlock();
-		hitBlock.getWorld().createExplosion(arrow.getLocation(), 0.1F);
-		removeStationaryLiquid(hitBlock);
-		lvlTwoArrows.remove(arrow.getUniqueId());
-	    }
-	}
+        if (event.getEntityType() == EntityType.ARROW) {
+            Arrow arrow = (Arrow) event.getEntity();
+            if (lvlOneArrows.contains(arrow.getUniqueId())) {
+                Block hitBlock = arrow.getLocation().getBlock();
+                hitBlock.getWorld().createExplosion(arrow.getLocation(), 0.1F);
+                removeFloatingLiquid(hitBlock);
+                lvlOneArrows.remove(arrow.getUniqueId());
+            } else if (lvlTwoArrows.contains(arrow.getUniqueId())) {
+                Block hitBlock = arrow.getLocation().getBlock();
+                hitBlock.getWorld().createExplosion(arrow.getLocation(), 0.1F);
+                removeStationaryLiquid(hitBlock);
+                lvlTwoArrows.remove(arrow.getUniqueId());
+            }
+        }
     }
 
     @EventHandler
     public void onPrepareItemcraftevent(PrepareItemCraftEvent event) {
-	if (event.getRecipe() instanceof ShapedRecipe) {
-	    ShapedRecipe recipe = (ShapedRecipe) event.getRecipe();
-	    try {
-		// control recipe fc lvl 1
-		if (event.getInventory().getItem(1).getType() == Material.TNT
-			&& event.getInventory().getItem(3).getType() == Material.TNT
-			&& (event.getInventory().getItem(2)
-				.getEnchantmentLevel(Enchantment.DURABILITY) != 1
-				|| event.getInventory()
-					.getItem(4)
-					.getEnchantmentLevel(
-						Enchantment.DURABILITY) != 1
-				|| event.getInventory()
-					.getItem(6)
-					.getEnchantmentLevel(
-						Enchantment.DURABILITY) != 1 || event
-				.getInventory().getItem(8)
-				.getEnchantmentLevel(Enchantment.DURABILITY) != 1)) {
-		    event.getInventory().setResult(new ItemStack(Material.AIR));
-		}
-		// Gunpowder lvl 2
-		if (event.getInventory().getItem(4).getType() == Material.TNT
-			&& event.getInventory().getItem(6).getType() == Material.TNT
-			&& (event.getInventory().getItem(1)
-				.getEnchantmentLevel(Enchantment.WATER_WORKER) != 1
-				|| event.getInventory()
-					.getItem(3)
-					.getEnchantmentLevel(
-						Enchantment.WATER_WORKER) != 1
-				|| event.getInventory()
-					.getItem(7)
-					.getEnchantmentLevel(
-						Enchantment.WATER_WORKER) != 1 || event
-				.getInventory().getItem(9)
-				.getEnchantmentLevel(Enchantment.WATER_WORKER) != 1)) {
-		    event.getInventory().setResult(new ItemStack(Material.AIR));
-		}
-		// Bow lvl 2
-		if ((event.getInventory().getItem(1).getType() == Material.STRING
-			&& event.getInventory().getItem(4).getType() == Material.STRING
-			&& event.getInventory().getItem(7).getType() == Material.STRING && event
-			.getInventory().getItem(6).getType() == Material.DIAMOND)
-			&& (event.getInventory().getItem(3)
-				.getEnchantmentLevel(Enchantment.DURABILITY) != 1
-				|| event.getInventory()
-					.getItem(9)
-					.getEnchantmentLevel(
-						Enchantment.DURABILITY) != 1 || event
-				.getInventory().getItem(5)
-				.getEnchantmentLevel(Enchantment.WATER_WORKER) != 1)) {
-		    event.getInventory().setResult(new ItemStack(Material.AIR));
-		}
-		// Bow lvl 1
-		if ((event.getInventory().getItem(1).getType() == Material.STRING
-			&& event.getInventory().getItem(4).getType() == Material.STRING
-			&& event.getInventory().getItem(7).getType() == Material.STRING && event
-			.getInventory().getItem(6).getType() == Material.DIAMOND)
-			&& (event.getInventory().getItem(3)
-				.getEnchantmentLevel(Enchantment.DURABILITY) != 1 || event
-				.getInventory().getItem(9)
-				.getEnchantmentLevel(Enchantment.DURABILITY) != 1)) {
-		    event.getInventory().setResult(new ItemStack(Material.AIR));
-		}
-	    } catch (Exception e) {
+        if (event.getRecipe() instanceof ShapedRecipe) {
+            ShapedRecipe recipe = (ShapedRecipe) event.getRecipe();
+            try {
+                // control recipe fc lvl 1
+                if (event.getInventory().getItem(1).getType() == Material.TNT
+                        && event.getInventory().getItem(3).getType() == Material.TNT
+                        && (event.getInventory().getItem(2)
+                                .getEnchantmentLevel(Enchantment.DURABILITY) != 1
+                                || event.getInventory().getItem(4)
+                                        .getEnchantmentLevel(Enchantment.DURABILITY) != 1
+                                || event.getInventory().getItem(6)
+                                        .getEnchantmentLevel(Enchantment.DURABILITY) != 1 || event
+                                .getInventory().getItem(8)
+                                .getEnchantmentLevel(Enchantment.DURABILITY) != 1)) {
+                    event.getInventory().setResult(new ItemStack(Material.AIR));
+                }
+                // Gunpowder lvl 2
+                if (event.getInventory().getItem(4).getType() == Material.TNT
+                        && event.getInventory().getItem(6).getType() == Material.TNT
+                        && (event.getInventory().getItem(1)
+                                .getEnchantmentLevel(Enchantment.WATER_WORKER) != 1
+                                || event.getInventory().getItem(3)
+                                        .getEnchantmentLevel(Enchantment.WATER_WORKER) != 1
+                                || event.getInventory().getItem(7)
+                                        .getEnchantmentLevel(Enchantment.WATER_WORKER) != 1 || event
+                                .getInventory().getItem(9)
+                                .getEnchantmentLevel(Enchantment.WATER_WORKER) != 1)) {
+                    event.getInventory().setResult(new ItemStack(Material.AIR));
+                }
+                // Bow lvl 2
+                if ((event.getInventory().getItem(1).getType() == Material.STRING
+                        && event.getInventory().getItem(4).getType() == Material.STRING
+                        && event.getInventory().getItem(7).getType() == Material.STRING && event
+                        .getInventory().getItem(6).getType() == Material.DIAMOND)
+                        && (event.getInventory().getItem(3)
+                                .getEnchantmentLevel(Enchantment.DURABILITY) != 1
+                                || event.getInventory().getItem(9)
+                                        .getEnchantmentLevel(Enchantment.DURABILITY) != 1 || event
+                                .getInventory().getItem(5)
+                                .getEnchantmentLevel(Enchantment.WATER_WORKER) != 1)) {
+                    event.getInventory().setResult(new ItemStack(Material.AIR));
+                }
+                // Bow lvl 1
+                if ((event.getInventory().getItem(1).getType() == Material.STRING
+                        && event.getInventory().getItem(4).getType() == Material.STRING
+                        && event.getInventory().getItem(7).getType() == Material.STRING && event
+                        .getInventory().getItem(6).getType() == Material.DIAMOND)
+                        && (event.getInventory().getItem(3)
+                                .getEnchantmentLevel(Enchantment.DURABILITY) != 1 || event
+                                .getInventory().getItem(9)
+                                .getEnchantmentLevel(Enchantment.DURABILITY) != 1)) {
+                    event.getInventory().setResult(new ItemStack(Material.AIR));
+                }
+            } catch (Exception e) {
 
-	    }
-	}
+            }
+        }
     }
 
     // removes floating liquid
     private void removeFloatingLiquid(Block block) {
-	Location loc = block.getLocation();
-	int radius = 8;
-	// removal of flowing water, radius of 4
-	for (int x = -radius; x <= radius; x++)
-	    for (int y = -radius; y <= radius; y++)
-		for (int z = -radius; z <= radius; z++) {
-		    Location targetLoc = new Location(loc.getWorld(),
-			    loc.getX() + x, loc.getY() + y, loc.getZ() + z);
-		    if (loc.distance(targetLoc) <= 3.0D
-			    && ((targetLoc.getBlock().getType() == Material.STATIONARY_WATER
-				    || targetLoc.getBlock().getType() == Material.STATIONARY_LAVA
-				    || targetLoc.getBlock().getType() == Material.WATER || targetLoc
-				    .getBlock().getType() == Material.LAVA) && targetLoc
-				    .getBlock().getData() > 0)) {
-			targetLoc.getBlock().setTypeId(0);
-		    }
-		}
+        Location loc = block.getLocation();
+        int radius = 8;
+        // removal of flowing water, radius of 4
+        for (int x = -radius; x <= radius; x++)
+            for (int y = -radius; y <= radius; y++)
+                for (int z = -radius; z <= radius; z++) {
+                    Location targetLoc = new Location(loc.getWorld(), loc.getX() + x, loc.getY()
+                            + y, loc.getZ() + z);
+                    if (loc.distance(targetLoc) <= 3.0D
+                            && ((targetLoc.getBlock().getType() == Material.STATIONARY_WATER
+                                    || targetLoc.getBlock().getType() == Material.STATIONARY_LAVA
+                                    || targetLoc.getBlock().getType() == Material.WATER || targetLoc
+                                    .getBlock().getType() == Material.LAVA) && targetLoc.getBlock()
+                                    .getData() > 0)) {
+                        targetLoc.getBlock().setTypeId(0);
+                    }
+                }
     }
 
     // removes stationary liquid
     private void removeStationaryLiquid(Block block) {
-	Location loc = block.getLocation();
-	int radius = 6;
-	// removal of source water, radius of 3
-	for (int x = -radius; x <= radius; x++)
-	    for (int y = -radius; y <= radius; y++)
-		for (int z = -radius; z <= radius; z++) {
-		    Location targetLoc = new Location(loc.getWorld(),
-			    loc.getX() + x, loc.getY() + y, loc.getZ() + z);
-		    if (loc.distance(targetLoc) <= 3.0D
-			    && ((targetLoc.getBlock().getType() == Material.STATIONARY_WATER
-				    || targetLoc.getBlock().getType() == Material.STATIONARY_LAVA
-				    || targetLoc.getBlock().getType() == Material.WATER || targetLoc
-				    .getBlock().getType() == Material.LAVA) && targetLoc
-				    .getBlock().getData() == 0)) {
-			targetLoc.getBlock().setTypeId(0);
-		    }
-		}
+        Location loc = block.getLocation();
+        int radius = 6;
+        // removal of source water, radius of 3
+        for (int x = -radius; x <= radius; x++)
+            for (int y = -radius; y <= radius; y++)
+                for (int z = -radius; z <= radius; z++) {
+                    Location targetLoc = new Location(loc.getWorld(), loc.getX() + x, loc.getY()
+                            + y, loc.getZ() + z);
+                    if (loc.distance(targetLoc) <= 3.0D
+                            && ((targetLoc.getBlock().getType() == Material.STATIONARY_WATER
+                                    || targetLoc.getBlock().getType() == Material.STATIONARY_LAVA
+                                    || targetLoc.getBlock().getType() == Material.WATER || targetLoc
+                                    .getBlock().getType() == Material.LAVA) && targetLoc.getBlock()
+                                    .getData() == 0)) {
+                        targetLoc.getBlock().setTypeId(0);
+                    }
+                }
     }
 
     // explodes and destroyes obby
     public void explode(Block block) {
-	Location loc = block.getLocation();
-	int radius = 1;
-	// 1F=0.25 TNT explosion; 4F=normal TNT strength
-	loc.getWorld().createExplosion(loc, 1.5F);
-	// removal of obby, radius of 3
-	for (int x = -radius; x <= radius; x++)
-	    for (int y = -radius; y <= radius; y++)
-		for (int z = -radius; z <= radius; z++) {
-		    Location targetLoc = new Location(loc.getWorld(),
-			    loc.getX() + x, loc.getY() + y, loc.getZ() + z);
-		    if (loc.distance(targetLoc) <= 3.0D
-			    && targetLoc.getBlock().getType() == Material.OBSIDIAN) {
-			if (!PreciousStones.API().isPStone(targetLoc))
-			    targetLoc.getBlock().setTypeId(0);
-		    }
-		}
+        Location loc = block.getLocation();
+        int radius = 1;
+        // 1F=0.25 TNT explosion; 4F=normal TNT strength
+        loc.getWorld().createExplosion(loc, 1.5F);
+        // removal of obby, radius of 3
+        for (int x = -radius; x <= radius; x++)
+            for (int y = -radius; y <= radius; y++)
+                for (int z = -radius; z <= radius; z++) {
+                    Location targetLoc = new Location(loc.getWorld(), loc.getX() + x, loc.getY()
+                            + y, loc.getZ() + z);
+                    if (loc.distance(targetLoc) <= 3.0D
+                            && targetLoc.getBlock().getType() == Material.OBSIDIAN) {
+                        if (!PreciousStones.API().isPStone(targetLoc))
+                            targetLoc.getBlock().setTypeId(0);
+                    }
+                }
     }
 
 }
