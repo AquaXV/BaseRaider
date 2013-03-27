@@ -5,45 +5,24 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.material.DirectionalContainer;
-import org.bukkit.material.MaterialData;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.util.BlockIterator;
 
 import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
 
@@ -54,8 +33,7 @@ public class BaseRaider extends JavaPlugin implements Listener {
     List<UUID>  lvlTwoArrows   = new Vector<>();
 
     private int fireballflying = 0;
-    private int strength       = 0;
-
+    
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
         recipes.addRecipes();
@@ -80,7 +58,7 @@ public class BaseRaider extends JavaPlugin implements Listener {
         if (event.isCancelled()) return;
         if (event.getItem().getType() == Material.FIREBALL
                 && event.getItem().getEnchantmentLevel(Enchantment.DURABILITY) == 1) {
-            strength = event.getItem().getEnchantmentLevel(Enchantment.DURABILITY);
+            event.getItem().getEnchantmentLevel(Enchantment.DURABILITY);
             fireballflying++;
         }
     }
@@ -133,56 +111,43 @@ public class BaseRaider extends JavaPlugin implements Listener {
     @EventHandler
     public void onPrepareItemcraftevent(PrepareItemCraftEvent event) {
         if (event.getRecipe() instanceof ShapedRecipe) {
-            ShapedRecipe recipe = (ShapedRecipe) event.getRecipe();
+            event.getRecipe();
             try {
                 // control recipe fc lvl 1
-                if (event.getInventory().getItem(1).getType() == Material.TNT
-                        && event.getInventory().getItem(3).getType() == Material.TNT
-                        && (event.getInventory().getItem(2)
-                                .getEnchantmentLevel(Enchantment.DURABILITY) != 1
-                                || event.getInventory().getItem(4)
-                                        .getEnchantmentLevel(Enchantment.DURABILITY) != 1
-                                || event.getInventory().getItem(6)
-                                        .getEnchantmentLevel(Enchantment.DURABILITY) != 1 || event
-                                .getInventory().getItem(8)
-                                .getEnchantmentLevel(Enchantment.DURABILITY) != 1)) {
+                if (event.getInventory().getItem(2).getType() == Material.COAL
+                        && event.getInventory().getItem(4).getType() == Material.COAL
+                        && (!event.getInventory().getItem(2).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Compressed Gunpowder")
+                                || !event.getInventory().getItem(2).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Compressed Gunpowder")
+                                || !event.getInventory().getItem(2).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Compressed Gunpowder")
+                                || !event.getInventory().getItem(2).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Compressed Gunpowder"))) {
                     event.getInventory().setResult(new ItemStack(Material.AIR));
                 }
                 // Gunpowder lvl 2
-                if (event.getInventory().getItem(4).getType() == Material.TNT
-                        && event.getInventory().getItem(6).getType() == Material.TNT
-                        && (event.getInventory().getItem(1)
-                                .getEnchantmentLevel(Enchantment.WATER_WORKER) != 1
-                                || event.getInventory().getItem(3)
-                                        .getEnchantmentLevel(Enchantment.WATER_WORKER) != 1
-                                || event.getInventory().getItem(7)
-                                        .getEnchantmentLevel(Enchantment.WATER_WORKER) != 1 || event
-                                .getInventory().getItem(9)
-                                .getEnchantmentLevel(Enchantment.WATER_WORKER) != 1)) {
+                if (event.getInventory().getItem(1).getType() == Material.COAL
+                        && event.getInventory().getItem(3).getType() == Material.COAL
+                        && (!event.getInventory().getItem(1).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Improved Gunpowder")
+                                || !event.getInventory().getItem(3).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Improved Gunpowder")
+                                || !event.getInventory().getItem(7).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Improved Gunpowder")
+                                || !event.getInventory().getItem(9).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Improved Gunpowder"))) {
                     event.getInventory().setResult(new ItemStack(Material.AIR));
                 }
                 // Bow lvl 2
                 if ((event.getInventory().getItem(1).getType() == Material.STRING
                         && event.getInventory().getItem(4).getType() == Material.STRING
-                        && event.getInventory().getItem(7).getType() == Material.STRING && event
-                        .getInventory().getItem(6).getType() == Material.DIAMOND)
-                        && (event.getInventory().getItem(3)
-                                .getEnchantmentLevel(Enchantment.DURABILITY) != 1
-                                || event.getInventory().getItem(9)
-                                        .getEnchantmentLevel(Enchantment.DURABILITY) != 1 || event
-                                .getInventory().getItem(5)
-                                .getEnchantmentLevel(Enchantment.WATER_WORKER) != 1)) {
+                        && event.getInventory().getItem(7).getType() == Material.STRING 
+                        && event.getInventory().getItem(6).getType() == Material.DIAMOND)
+                        && (!event.getInventory().getItem(3).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Obby killer")
+                                || !event.getInventory().getItem(9).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Obby killer")
+                                || !event.getInventory().getItem(5).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Water drainer Mk. I"))) {
                     event.getInventory().setResult(new ItemStack(Material.AIR));
                 }
                 // Bow lvl 1
                 if ((event.getInventory().getItem(1).getType() == Material.STRING
                         && event.getInventory().getItem(4).getType() == Material.STRING
-                        && event.getInventory().getItem(7).getType() == Material.STRING && event
-                        .getInventory().getItem(6).getType() == Material.DIAMOND)
-                        && (event.getInventory().getItem(3)
-                                .getEnchantmentLevel(Enchantment.DURABILITY) != 1 || event
-                                .getInventory().getItem(9)
-                                .getEnchantmentLevel(Enchantment.DURABILITY) != 1)) {
+                        && event.getInventory().getItem(7).getType() == Material.STRING 
+                        && event.getInventory().getItem(6).getType() == Material.DIAMOND)
+                        && (!event.getInventory().getItem(3).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Improved Gunpowder")
+                            || !event.getInventory().getItem(9).getItemMeta().getDisplayName().equals(ChatColor.RESET + "Improved Gunpowder"))) {
                     event.getInventory().setResult(new ItemStack(Material.AIR));
                 }
             } catch (Exception e) {
