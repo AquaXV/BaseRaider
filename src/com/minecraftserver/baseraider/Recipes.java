@@ -1,17 +1,17 @@
 package com.minecraftserver.baseraider;
 
 import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class Recipes {
-    public void addRecipes() {
-        ArrayList<String> lore = new ArrayList<String>();
+    public static void addRecipes() {
+        ArrayList<String> lore = new ArrayList<>();
         final ItemStack arrow = new ItemStack(Material.ARROW, 1);
         ItemMeta im = arrow.getItemMeta();
         lore.add("1");
@@ -20,6 +20,15 @@ public class Recipes {
         lore.add("4");
         lore.add("5");
         lore.add("6");
+
+        /*
+         * Arrow of doom
+         * receipe (#=empty spot)
+         * # # D
+         * # S #
+         * F # #
+         * no check needed
+         */
         im.setDisplayName("Arrow of doom");
         im.setLore(lore);
         arrow.setItemMeta(im);
@@ -30,7 +39,18 @@ public class Recipes {
         DArrow.setIngredient('F', Material.FEATHER);
         Bukkit.getServer().addRecipe(DArrow);
 
-        ArrayList<String> lore1 = new ArrayList<String>();
+        /*
+         * Compressed Gunpowder
+         * receipe (#=empty spot)
+         * # # #
+         * G G G
+         * # # #
+         * 2. receipe
+         * # G #
+         * # G #
+         * # G #
+         * no check needed
+         */
         ItemStack is1 = new ItemStack(Material.SULPHUR, 1);
         ItemMeta im1 = is1.getItemMeta();
         im1.setDisplayName(ChatColor.RESET + "Compressed Gunpowder");
@@ -44,7 +64,14 @@ public class Recipes {
         recipe1b.setIngredient('A', Material.SULPHUR);
         Bukkit.getServer().addRecipe(recipe1b);
 
-        ArrayList<String> lore2 = new ArrayList<String>();
+        /*
+         * Improved Gunpowder
+         * receipe (#=empty spot; A=Compressed Gunpowder)
+         * A C A
+         * C F C
+         * A C A
+         * check needed
+         */
         ItemStack is2 = new ItemStack(Material.SULPHUR, 1);
         ItemMeta im2 = is2.getItemMeta();
         im2.setDisplayName(ChatColor.RESET + "Improved Gunpowder");
@@ -56,7 +83,14 @@ public class Recipes {
         recipe2.setIngredient('C', Material.FIREBALL);
         Bukkit.getServer().addRecipe(recipe2);
 
-        ArrayList<String> lore3 = new ArrayList<String>();
+        /*
+         * Obby killer
+         * receipe (#=empty spot; A=Improved Gunpowder)
+         * A C A
+         * C F C
+         * A C A
+         * check needed
+         */
         ItemStack is3 = new ItemStack(Material.FIREBALL, 1);
         ItemMeta im3 = is3.getItemMeta();
         im3.setDisplayName(ChatColor.RESET + "Obby killer");
@@ -68,9 +102,18 @@ public class Recipes {
         recipe3.setIngredient('C', Material.FIREBALL);
         Bukkit.getServer().addRecipe(recipe3);
 
-        ArrayList<String> lore4 = new ArrayList<String>();
+        /*
+         * Water drainer Mk. I
+         * receipe (#=empty spot; A=Improved Gunpowder; G=String; K=Stick)
+         * G K A
+         * G # D
+         * G K A
+         * check needed
+         */
+        ArrayList<String> lore4 = new ArrayList<>();
         lore4.add(ChatColor.RESET + "" + ChatColor.GRAY + "Has only 1 use!");
-        lore4.add(ChatColor.RESET + "" + ChatColor.GRAY + "Drains flowing water");
+        lore4.add(ChatColor.RESET + "" + ChatColor.GRAY
+                + "Drains flowing water");
         lore4.add(ChatColor.RESET + "" + ChatColor.GRAY + "Radius: 4");
         ItemStack is4 = new ItemStack(Material.BOW, 1);
         ItemMeta im4 = is4.getItemMeta();
@@ -85,7 +128,16 @@ public class Recipes {
         recipe4.setIngredient('D', Material.DIAMOND);
         Bukkit.getServer().addRecipe(recipe4);
 
-        ArrayList<String> lore5 = new ArrayList<String>();
+        /*
+         * Water drainer Mk. II
+         * receipe (#=empty spot; A=Water drainer Mk. I; B=Obby killer;
+         * G=String; K=Stick)
+         * G K B
+         * G A D
+         * G K B
+         * check needed
+         */
+        ArrayList<String> lore5 = new ArrayList<>();
         lore4.add(ChatColor.RESET + "" + ChatColor.GRAY + "Has only 1 use!");
         lore4.add(ChatColor.RESET + "" + ChatColor.GRAY + "Drains source water");
         lore4.add(ChatColor.RESET + "" + ChatColor.GRAY + "Radius: 3");

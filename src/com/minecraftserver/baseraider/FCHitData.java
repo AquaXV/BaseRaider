@@ -4,18 +4,19 @@ import org.bukkit.Location;
 
 public class FCHitData {
 
-    private Location loc;
-    private int strength;
-    
-    public FCHitData(Location l ,int s){
-	loc=l;
-	strength=s;
+    private final Location loc;
+    private final int      strength;
+
+    public FCHitData(Location l, int s) {
+        this.loc = l;
+        this.strength = s;
     }
-    
+
     public Location getLoc() {
-        return loc;
+        return this.loc;
     }
+
     public int getStrength() {
-        return strength;
+        return this.strength;
     }
 }
