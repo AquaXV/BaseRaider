@@ -1,6 +1,7 @@
 package com.minecraftserver.baseraider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,6 +11,8 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class Recipes {
+    public static HashMap<String, String[]> receipes = new HashMap<>();
+
     public static void addRecipes() {
         ArrayList<String> lore = new ArrayList<>();
         final ItemStack arrow = new ItemStack(Material.ARROW, 1);
@@ -81,14 +84,17 @@ public class Recipes {
         recipe2.setIngredient('A', is1.getType());
         recipe2.setIngredient('B', Material.COAL);
         recipe2.setIngredient('C', Material.FIREBALL);
+        String[] receipe = { im1.getDisplayName(), "", im1.getDisplayName(),
+                "", "", "", im1.getDisplayName(), "", im1.getDisplayName() };
+        receipes.put(im2.getDisplayName(), receipe);
         Bukkit.getServer().addRecipe(recipe2);
 
         /*
          * Obby killer
          * receipe (#=empty spot; A=Improved Gunpowder)
-         * A C A
-         * C F C
-         * A C A
+         * C A C
+         * A F A
+         * C A C
          * check needed
          */
         ItemStack is3 = new ItemStack(Material.FIREBALL, 1);
@@ -100,6 +106,10 @@ public class Recipes {
         recipe3.setIngredient('A', is2.getType());
         recipe3.setIngredient('B', Material.COAL);
         recipe3.setIngredient('C', Material.FIREBALL);
+        String[] receipe1 = { "", im2.getDisplayName(), "",
+                im2.getDisplayName(), "", im2.getDisplayName(), "",
+                im2.getDisplayName(), "" };
+        receipes.put(im3.getDisplayName(), receipe1);
         Bukkit.getServer().addRecipe(recipe3);
 
         /*
@@ -126,6 +136,9 @@ public class Recipes {
         recipe4.setIngredient('B', Material.STICK);
         recipe4.setIngredient('C', is2.getType());
         recipe4.setIngredient('D', Material.DIAMOND);
+        String[] receipe2 = { "", "", im2.getDisplayName(), "", "", "", "", "",
+                im2.getDisplayName() };
+        receipes.put(im4.getDisplayName(), receipe2);
         Bukkit.getServer().addRecipe(recipe4);
 
         /*
@@ -153,6 +166,9 @@ public class Recipes {
         recipe5.setIngredient('C', Material.DIAMOND);
         recipe5.setIngredient('D', Material.STICK);
         recipe5.setIngredient('E', Material.STRING);
+        String[] receipe3 = { "", "", im3.getDisplayName(), "",
+                im4.getDisplayName(), "", "", "", im3.getDisplayName() };
+        receipes.put(im4.getDisplayName(), receipe3);
         Bukkit.getServer().addRecipe(recipe5);
     }
 }

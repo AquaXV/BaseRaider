@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,9 +20,6 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BaseRaider extends JavaPlugin implements Listener {
@@ -45,108 +41,6 @@ public class BaseRaider extends JavaPlugin implements Listener {
                             targetLoc.getBlock().setTypeId(0);
                     }
                 }
-    }
-
-    @EventHandler
-    public static void onPrepareItemcraftevent(PrepareItemCraftEvent event) {
-        if (event.getRecipe() instanceof ShapedRecipe) {
-            event.getRecipe();
-            try {
-                // control recipe Obby killer
-                if (event.getInventory().getItem(2).getType() == Material.COAL
-                        && event.getInventory().getItem(4).getType() == Material.COAL
-                        && (!event.getInventory().getItem(1).getItemMeta()
-                                .getDisplayName()
-                                .equals(ChatColor.RESET + "Improved Gunpowder")
-                                || !event
-                                        .getInventory()
-                                        .getItem(3)
-                                        .getItemMeta()
-                                        .getDisplayName()
-                                        .equals(ChatColor.RESET
-                                                + "Improved Gunpowder")
-                                || !event
-                                        .getInventory()
-                                        .getItem(5)
-                                        .getItemMeta()
-                                        .getDisplayName()
-                                        .equals(ChatColor.RESET
-                                                + "Improved Gunpowder") || !event
-                                .getInventory().getItem(7).getItemMeta()
-                                .getDisplayName()
-                                .equals(ChatColor.RESET + "Improved Gunpowder"))) {
-                    event.getInventory().setResult(new ItemStack(Material.AIR));
-                }
-                // Improved Gunpowder
-                if (event.getInventory().getItem(2).getType() == Material.COAL
-                        && event.getInventory().getItem(4).getType() == Material.COAL
-                        && (!event
-                                .getInventory()
-                                .getItem(1)
-                                .getItemMeta()
-                                .getDisplayName()
-                                .equals(ChatColor.RESET
-                                        + "Compressed Gunpowder")
-                                || !event
-                                        .getInventory()
-                                        .getItem(3)
-                                        .getItemMeta()
-                                        .getDisplayName()
-                                        .equals(ChatColor.RESET
-                                                + "Compressed Gunpowder")
-                                || !event
-                                        .getInventory()
-                                        .getItem(7)
-                                        .getItemMeta()
-                                        .getDisplayName()
-                                        .equals(ChatColor.RESET
-                                                + "Compressed Gunpowder") || !event
-                                .getInventory()
-                                .getItem(9)
-                                .getItemMeta()
-                                .getDisplayName()
-                                .equals(ChatColor.RESET
-                                        + "Compressed Gunpowder"))) {
-                    event.getInventory().setResult(new ItemStack(Material.AIR));
-                }
-                // Water drainer Mk. II
-                if ((event.getInventory().getItem(1).getType() == Material.STRING
-                        && event.getInventory().getItem(4).getType() == Material.STRING
-                        && event.getInventory().getItem(7).getType() == Material.STRING && event
-                        .getInventory().getItem(6).getType() == Material.DIAMOND)
-                        && (!event.getInventory().getItem(3).getItemMeta()
-                                .getDisplayName()
-                                .equals(ChatColor.RESET + "Obby killer")
-                                || !event
-                                        .getInventory()
-                                        .getItem(9)
-                                        .getItemMeta()
-                                        .getDisplayName()
-                                        .equals(ChatColor.RESET + "Obby killer") || !event
-                                .getInventory()
-                                .getItem(5)
-                                .getItemMeta()
-                                .getDisplayName()
-                                .equals(ChatColor.RESET + "Water drainer Mk. I"))) {
-                    event.getInventory().setResult(new ItemStack(Material.AIR));
-                }
-                // Water drainer Mk. I
-                if ((event.getInventory().getItem(1).getType() == Material.STRING
-                        && event.getInventory().getItem(4).getType() == Material.STRING
-                        && event.getInventory().getItem(7).getType() == Material.STRING && event
-                        .getInventory().getItem(6).getType() == Material.DIAMOND)
-                        && (!event.getInventory().getItem(3).getItemMeta()
-                                .getDisplayName()
-                                .equals(ChatColor.RESET + "Improved Gunpowder") || !event
-                                .getInventory().getItem(9).getItemMeta()
-                                .getDisplayName()
-                                .equals(ChatColor.RESET + "Improved Gunpowder"))) {
-                    event.getInventory().setResult(new ItemStack(Material.AIR));
-                }
-            } catch (Exception e) {
-                // go away error!
-            }
-        }
     }
 
     // removes floating liquid
@@ -236,8 +130,11 @@ public class BaseRaider extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        getServer().getPluginManager().registerEvents(this, this);
         Recipes.addRecipes();
+        com.minecraftserver.baseraider.Listener listener = new com.minecraftserver.baseraider.Listener(
+                this);
+        getServer().getPluginManager().registerEvents(this, this);
+        getServer().getPluginManager().registerEvents(listener, this);
         this.log.info("[BaseRaider] System Enabled.");
     }
 
