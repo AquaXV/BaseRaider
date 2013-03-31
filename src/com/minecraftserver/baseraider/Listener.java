@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 
 public class Listener implements org.bukkit.event.Listener {
+    static String DisplayName;
     @EventHandler
     public static void onPrepareItemcraftevent(PrepareItemCraftEvent event) {
         if (event.getRecipe() instanceof ShapedRecipe) {
@@ -23,10 +24,13 @@ public class Listener implements org.bukkit.event.Listener {
                 // create array of current workbench items
                 String[] currentreceipe = new String[9];
                 for (int i = 0; i < 9; i++) {
-                    String itemInSlotDisplayName = event.getInventory()
-                            .getItem(i + 1).getItemMeta().getDisplayName();
+                    ItemStack itemInSlot = event.getInventory()
+                            .getItem(i + 1);
+                    if (itemInSlot != null){
+                        DisplayName = itemInSlot.getItemMeta().getDisplayName();
+                    }
                     // add it to array if its null add empty ""
-                    currentreceipe[i] = (itemInSlotDisplayName != null ? itemInSlotDisplayName
+                    currentreceipe[i] = (DisplayName != null ? DisplayName
                             : "");
                 }
                 // compare both array if they dont match cancel craft

@@ -1,13 +1,13 @@
 name: BaseRaider
-version: 1.8.0
+version: 1.8.12
 author: M0P, AquaXV
 main: com.minecraftserver.baseraider.BaseRaider
-prefix: baseraider
+prefix: BaseRaider
       
 permissions:
     baseraider.bow.cankeep1:
-        description: Allows you to keep your lvl 1 bow
+        description: Allows you to keep your Mk. I bow
         default: op
     baseraider.bow.cankeep2:
-        description: Allows you to keep your lvl 2 bow
+        description: Allows you to keep your Mk. II bow
         default: op

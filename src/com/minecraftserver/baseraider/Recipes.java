@@ -14,44 +14,24 @@ public class Recipes {
     public static HashMap<String, String[]> receipes = new HashMap<>();
 
     public static void addRecipes() {
-        ArrayList<String> lore = new ArrayList<>();
-        final ItemStack arrow = new ItemStack(Material.ARROW, 1);
-        ItemMeta im = arrow.getItemMeta();
-        lore.add("1");
-        lore.add("2");
-        lore.add("3");
-        lore.add("4");
-        lore.add("5");
-        lore.add("6");
-
-        /*
-         * Arrow of doom
-         * receipe (#=empty spot)
-         * # # D
-         * # S #
-         * F # #
-         * no check needed
-         */
-        im.setDisplayName("Arrow of doom");
-        im.setLore(lore);
-        arrow.setItemMeta(im);
-        ShapedRecipe DArrow = new ShapedRecipe(arrow);
-        DArrow.shape("  D", " S ", "F  ");
-        DArrow.setIngredient('D', Material.DIAMOND);
-        DArrow.setIngredient('S', Material.STICK);
-        DArrow.setIngredient('F', Material.FEATHER);
-        Bukkit.getServer().addRecipe(DArrow);
-
         /*
          * Compressed Gunpowder
          * receipe (#=empty spot)
-         * # # #
-         * G G G
+         * G G #
+         * G G #
          * # # #
          * 2. receipe
-         * # G #
-         * # G #
-         * # G #
+         * # G G
+         * # G G
+         * # # #
+         * 
+         * # # #
+         * G G #
+         * G G #
+         * 
+         * # # #
+         * # G G
+         * # G G
          * no check needed
          */
         ItemStack is1 = new ItemStack(Material.SULPHUR, 1);
@@ -59,23 +39,34 @@ public class Recipes {
         im1.setDisplayName(ChatColor.RESET + "Compressed Gunpowder");
         is1.setItemMeta(im1);
         ShapedRecipe recipe1a = new ShapedRecipe(is1);
-        recipe1a.shape(new String[] { "   ", "AAA", "   " });
+        recipe1a.shape(new String[] { "AA ", "AA ", "   " });
         recipe1a.setIngredient('A', Material.SULPHUR);
         Bukkit.getServer().addRecipe(recipe1a);
         ShapedRecipe recipe1b = new ShapedRecipe(is1);
-        recipe1b.shape(new String[] { " A ", " A ", " A " });
+        recipe1b.shape(new String[] { " AA", " AA", "   " });
         recipe1b.setIngredient('A', Material.SULPHUR);
         Bukkit.getServer().addRecipe(recipe1b);
+        ShapedRecipe recipe1c = new ShapedRecipe(is1);
+        recipe1c.shape(new String[] { "   ", " AA", " AA" });
+        recipe1c.setIngredient('A', Material.SULPHUR);
+        Bukkit.getServer().addRecipe(recipe1c);
+        ShapedRecipe recipe1d = new ShapedRecipe(is1);
+        recipe1d.shape(new String[] { "   ", "AA ", "AA " });
+        recipe1d.setIngredient('A', Material.SULPHUR);
+        Bukkit.getServer().addRecipe(recipe1d);
+        String[] receipepre = { "", "", "",
+                "", "", "", "", "", "" };
+        receipes.put(im1.getDisplayName(), receipepre);
 
         /*
          * Improved Gunpowder
-         * receipe (#=empty spot; A=Compressed Gunpowder)
+         * receipe (#=empty spot; A=Compressed Gunpowder; N=Netherrack)
          * A C A
-         * C F C
+         * C N C
          * A C A
          * check needed
          */
-        ItemStack is2 = new ItemStack(Material.SULPHUR, 1);
+        ItemStack is2 = new ItemStack(Material.SULPHUR, 2);
         ItemMeta im2 = is2.getItemMeta();
         im2.setDisplayName(ChatColor.RESET + "Improved Gunpowder");
         is2.setItemMeta(im2);
@@ -83,7 +74,7 @@ public class Recipes {
         recipe2.shape(new String[] { "ABA", "BCB", "ABA" });
         recipe2.setIngredient('A', is1.getType());
         recipe2.setIngredient('B', Material.COAL);
-        recipe2.setIngredient('C', Material.FIREBALL);
+        recipe2.setIngredient('C', Material.NETHERRACK);
         String[] receipe = { im1.getDisplayName(), "", im1.getDisplayName(),
                 "", "", "", im1.getDisplayName(), "", im1.getDisplayName() };
         receipes.put(im2.getDisplayName(), receipe);
@@ -168,7 +159,7 @@ public class Recipes {
         recipe5.setIngredient('E', Material.STRING);
         String[] receipe3 = { "", "", im3.getDisplayName(), "",
                 im4.getDisplayName(), "", "", "", im3.getDisplayName() };
-        receipes.put(im4.getDisplayName(), receipe3);
+        receipes.put(im5.getDisplayName(), receipe3);
         Bukkit.getServer().addRecipe(recipe5);
     }
 }
