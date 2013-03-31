@@ -24,11 +24,9 @@ public class Recipes {
          * # G G
          * # G G
          * # # #
-         * 
          * # # #
          * G G #
          * G G #
-         * 
          * # # #
          * # G G
          * # G G
@@ -54,10 +52,6 @@ public class Recipes {
         recipe1d.shape(new String[] { "   ", "AA ", "AA " });
         recipe1d.setIngredient('A', Material.SULPHUR);
         Bukkit.getServer().addRecipe(recipe1d);
-        String[] receipepre = { "", "", "",
-                "", "", "", "", "", "" };
-        receipes.put(im1.getDisplayName(), receipepre);
-
         /*
          * Improved Gunpowder
          * receipe (#=empty spot; A=Compressed Gunpowder; N=Netherrack)
