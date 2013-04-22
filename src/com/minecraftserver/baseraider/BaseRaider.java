@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -122,8 +123,8 @@ public class BaseRaider extends JavaPlugin implements Listener {
     public void onDispenceFireball(BlockDispenseEvent event) {
         if (event.isCancelled()) return;
         if (event.getItem().getType() == Material.FIREBALL
-                && event.getItem().getEnchantmentLevel(Enchantment.DURABILITY) == 1) {
-            event.getItem().getEnchantmentLevel(Enchantment.DURABILITY);
+                && event.getItem().getItemMeta().getDisplayName().equals(ChatColor.RESET + "Obby killer")) {
+            event.getItem().getItemMeta().getDisplayName().equals(ChatColor.RESET + "Obby killer");
             this.fireballflying++;
         }
     }
