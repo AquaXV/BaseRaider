@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="PreciousStones">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/main/resources/lib/PreciousStones.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
